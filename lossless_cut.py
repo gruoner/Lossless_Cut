@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # -*- coding: UTF-8 -*-
 # ----------------------
 """
@@ -329,16 +329,7 @@ class OutStreamEncoder(object):
     def write(self, obj):
         """Wraps the output stream, encoding Unicode strings with the
         specified encoding"""
-        if isinstance(obj, str):
-            try:
-                self.out.write(obj.encode(self.encoding))
-            except IOError:
-                pass
-        else:
-            try:
-                self.out.write(obj)
-            except IOError:
-                pass
+        self.out.write(obj)
 
     def __getattr__(self, attr):
         """Delegate everything but write to the stream"""
@@ -468,7 +459,7 @@ You are ready to perform loss less cuts on MythTV recorded videos.
             sys.exit(int(self.jobstatus.UNKNOWN))
         #
         # Verify that one and only one of these options have been selected
-        sys.stdout.write(common.LL_START_END_FORMAT)
+        # sys.stdout.write(common.LL_START_END_FORMAT)
         count = 0
         for key in ['replace', 'mythvideo_export', 'movepath']:
             if self.configuration[key]:
@@ -496,7 +487,7 @@ _(u'''You must ONLY select ONE of these three options "-e", "-m", "r". See:
             # Thank you for contributing to this project.
 _(u'''Start loss less commercial cut of "%s" at: %s''') % (
             self.configuration['recordedfile'],
-            self.processing_started.strftime(common.LL_START_END_FORMAT).decode))
+            self.processing_started.strftime(common.LL_START_END_FORMAT)))
         #
         self._display_variables()
         #
@@ -1249,7 +1240,7 @@ u' --title "%(mkv_title)s" --attachment-description "%(mkv_description)s"' % \
             merge_metadata = u''
         if not self.configuration['rawcutlist'] or \
                             not self.configuration['append_list']:
-            if self.configuration.has_key('append_list'):
+            if 'append_list' in self.configuration:
                 arguments = u'%s%s%s' % (merge_common, merge_one_segment,
                                             merge_metadata)
             else:
@@ -1381,8 +1372,7 @@ Error: %s''') % errmsg
         for self.configuration['split_list'] in self.configuration[
                                                         'concert_cut_list']:
             #
-            if self.configuration['segment_names'].has_key(
-                            self.configuration['seg_num']):
+            if self.configuration['seg_num'] in self.configuration['segment_names']:
                 file_name = self.configuration[
                                 'segment_names'][
                                 self.configuration['seg_num']] % \

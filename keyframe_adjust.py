@@ -44,7 +44,7 @@ from importcode.mythtvinterface import Mythtvinterface
 #
 try:
     from lxml import etree as etree
-except Exception, errmsg:
+except Exception as errmsg:
     sys.stderr.write(u'''
 Importing the "lxml" python libraries failed on
 Error: %s\n''' % errmsg)
@@ -194,18 +194,7 @@ class OutStreamEncoder(object):
             self.encoding = encoding
 
     def write(self, obj):
-        """Wraps the output stream, encoding Unicode strings with the
-        specified encoding"""
-        if isinstance(obj, unicode):
-            try:
-                self.out.write(obj.encode(self.encoding))
-            except IOError:
-                pass
-        else:
-            try:
-                self.out.write(obj)
-            except IOError:
-                pass
+        self.out.write(obj)
 
     def __getattr__(self, attr):
         """Delegate everything but write to the stream"""
@@ -228,7 +217,7 @@ class Keyframeadjust(object):
         #
         try:
             self.configuration = get_config(opts, keyframe_adjust=True)
-        except Exception, errmsg:
+        except Exception as errmsg:
             sys.stderr.write(
                 # TRANSLATORS: Please leave %s as it is,
                 # because it is needed by the program.
@@ -245,7 +234,7 @@ _(u'''Processing the configuration file failed. Error(%s)\n''')
         try:
             self.mythtvinterface = Mythtvinterface(self.logger,
                                                     self.configuration)
-        except Exception, errmsg:
+        except Exception as errmsg:
             sys.stderr.write(
                 # TRANSLATORS: Please leave %s as it is,
                 # because it is needed by the program.
@@ -274,7 +263,7 @@ Error(%s)\n''')
         try:
             self.configuration['mythutil'] = check_dependancies(
                     self.configuration)
-        except Exception, errmsg:
+        except Exception as errmsg:
             sys.stderr.write(
                 # TRANSLATORS: Please leave %s as it is,
                 # because it is needed by the program.
@@ -444,7 +433,7 @@ Title: (%s); Version: description(%s); Author: (%s)
         try:
             if not os.path.isdir(common.CONFIG_DIR):
                 create_cachedir(common.CONFIG_DIR)
-        except Exception, errmsg:
+        except Exception as errmsg:
             # TRANSLATORS: Please leave %s as it is,
             # because it is needed by the program.
             # Thank you for contributing to this project.
@@ -456,7 +445,7 @@ copy the file "%s" to "%s", aborting script.
         # Initialize the new configuration with default values file
         try:
             create_config_file()
-        except IOError, errmsg:
+        except IOError as errmsg:
             sys.stderr.write(errmsg)
             exit(int(common.JOBSTATUS().ABORTED))
     #

@@ -190,7 +190,7 @@ UNSUPPORTED_PRE_VERSION = 26
 VIDEO_TRACK_DELAY = u' --sync 0:%d'
 #
 ## String which identifies track info from mkvmerge --identity command
-TRACK_ID = u'Track ID'
+TRACK_ID = u'Spur ID'
 ## Various commands and argument sets
 ADD_SRT_CMD = u'-o "%(workpath)s/%(recorded_name)s_tmp.mkv" "%(recordedfile)s"'
 EXTRACT_DVB_SUBTITLES = u'''-Djava.awt.headless=true -jar "%(projectx_jar_path)s" -ini "%(projectx_ini_path)s" -out "%(workpath)s" -name "%(recorded_name)s" "%(recordedfile)s"'''
