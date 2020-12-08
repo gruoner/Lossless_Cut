@@ -972,8 +972,7 @@ See the track numbers and types as listed by "mkvmerge --identify":
         index = track.find('audio')
         if not index == -1:
             if str(configuration['tracknumber']) == \
-                        track[:track_id_index].replace(
-                            common.TRACK_ID, u'').strip():
+                        track[:track_id_index].split(' ')[2].strip():
                 return
     #
     raise Exception(err_2 % (configuration['tracknumber'],

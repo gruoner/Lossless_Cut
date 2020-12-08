@@ -1064,19 +1064,15 @@ Error: %s''') % (result[1])
                 index = track.find('video')
                 if not index == -1 and video == False:
                     index = track.find(':')
-                    video = u'-d ' + track[:track_id_index].replace(
-                                    common.TRACK_ID, u'').strip()
+                    video = u'-d ' + track[:track_id_index].split(' ')[2].strip()
                 index = track.find('audio')
                 if not index == -1:
                     if self.configuration['tracknumber']:
                         if str(self.configuration['tracknumber']) == \
-                                track[:track_id_index].replace(
-                                    common.TRACK_ID, u'').strip():
-                            audio =  u'-a ' + track[:track_id_index].replace(
-                                            common.TRACK_ID, u'').strip()
+                                track[:track_id_index].split(' ')[2].strip():
+                            audio =  u'-a ' + track[:track_id_index].split(' ')[2].strip()
                     elif audio == False:
-                        audio = u'-a ' + track[:track_id_index].replace(
-                                        common.TRACK_ID, u'').strip()
+                        audio = u'-a ' + track[:track_id_index].split(' ')[2].strip()
             if audio == False:
                 audio = u''
             if video == False:
