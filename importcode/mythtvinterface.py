@@ -306,13 +306,13 @@ u'''There is no MythTV recorded record for video file "%s", aborting script.''')
             # because it is needed by the program.
             # Thank you for contributing to this project.
             verbage = _(
-u'''There is no MythTV recordedprogram record for the video file "%s", aborting script.''') % self.configuration['base_name']
+u'''There is no MythTV recordedprogram record for the video file "%s", continue'ing script.''') % self.configuration['base_name']
             self.logger.critical(verbage)
             self.stderr.write(verbage + u'\n')
             #
             ## Remove this recording's files from the working directory
-            cleanup_working_dir(self.configuration['workpath'], self.configuration['recorded_name'])
-            exit(int(common.JOBSTATUS().ABORTED))
+#            cleanup_working_dir(self.configuration['workpath'], self.configuration['recorded_name'])
+#            exit(int(common.JOBSTATUS().ABORTED))
         #
         ## Get this recorded video's recorder info
         self._get_recorder_details()
@@ -332,9 +332,9 @@ u'''There is no MythTV recordedprogram record for the video file "%s", aborting 
         self.configuration['subtitle'] = self.recorded.subtitle
         self.configuration['episode'] = self.recorded.subtitle
         self.configuration['description'] = self.recorded.description
-        if self.recorded_program['originalairdate']:
+        if self.recorded_program and self.recorded_program['originalairdate']:
             self.configuration['releasedate'] = self.recorded_program['originalairdate'].strftime('%Y')
-        elif self.recorded_program['airdate']:
+        elif self.recorded_program and self.recorded_program['airdate']:
             self.configuration['releasedate'] = self.recorded_program['airdate']
         else:
             self.configuration['releasedate'] = None
@@ -364,7 +364,7 @@ u'''There is no MythTV recordedprogram record for the video file "%s", aborting 
                     self.configuration['description'] = self.metadata['description']
                 self.configuration['season_num'] = self.metadata['season']
                 self.configuration['episode_num'] = self.metadata['episode']
-        elif not self.recorded_program.category_type == 'series':
+        elif self.recorded_program and not self.recorded_program.category_type == 'series':
             self._get_movie_metadata(title=self.configuration['title'], inetref=self.configuration['inetref'])
             if self.metadata:
                 self.configuration['inetref'] = self.metadata['inetref']
@@ -382,10 +382,10 @@ u'''There is no MythTV recordedprogram record for the video file "%s", aborting 
                 self.configuration['mkv_title'] = self.configuration['tvseries_format'] % self.configuration
             else:
                 self.configuration['mkv_title'] = u'%s: %s' % (self.configuration['title'], self.configuration['subtitle'])
-        elif self.recorded_program.category_type == 'series' and not self.configuration['subtitle']:
+        elif self.recorded_program and self.recorded_program.category_type == 'series' and not self.configuration['subtitle']:
             self.configuration['mkv_title'] = u'%s' % (self.configuration['title'],)
         else:
-            if self.configuration['releasedate'] and not self.recorded_program.category_type == 'series':
+            if self.configuration['releasedate'] and self.recorded_program and not self.recorded_program.category_type == 'series':
                 self.configuration['mkv_title'] =  self.configuration['movie_format'] % self.configuration
             else:
                 self.configuration['mkv_title'] = self.configuration['title']
@@ -396,7 +396,7 @@ u'''There is no MythTV recordedprogram record for the video file "%s", aborting 
         #
         ## Set mythvidexport format and information
         self.configuration['contenttype'] = 2 # Default to a TV show
-        if self.recorded_program.category_type == 'series':
+        if self.recorded_program and self.recorded_program.category_type == 'series':
             if self.configuration['subtitle'] and self.configuration['episode_num'] > 0:
                 self.configuration['export_format'] = self.configuration['TVexportfmt']
             else:
@@ -404,7 +404,7 @@ u'''There is no MythTV recordedprogram record for the video file "%s", aborting 
                 # Only include ":", subtitle in the format when one exists
                 if not self.configuration['subtitle']:
                     self.configuration['export_format'] = self.configuration['export_format'].replace(u':', u'').replace(u'-', u'').replace(u'%SUBTITLE%', u'').strip()
-        elif self.recorded_program.category_type == 'movie':
+        elif self.recorded_program and self.recorded_program.category_type == 'movie':
             self.configuration['contenttype'] = 1 # Set to movie
             if self.configuration['releasedate']:
                 self.configuration['export_format'] = self.configuration['MOVIEexportfmt']
@@ -1236,7 +1236,7 @@ Your installed version has been detected as "%s", aborting script.''') % self.co
                 for artwork in artworkArray:
                     # Make sure that this artwork record is not
                     # just a duplicate inetref between the two grabber sites
-                    if not \
+                    if self.recorded_program and not \
                         self.recorded_program.category_type == 'series' and not self.configuration['subtitle'] and self.configuration['season_num'] == 0:
                         if not artwork.season == 0:
                             continue
